@@ -4,7 +4,7 @@
     <%= data.body %>
 </article>
 <% if (isLoggedIn) { %>
-    <form action="/add-comment" method="POST">
+    <form action="/add-comment" method="POST" style="margin-top: 30px;">
         <input type="hidden" name="postId" value="<%= data._id %>">
         <label for="body"><b>Add comment</b></label>
         <textarea name="body" id="body" cols="30" rows="10"></textarea>
