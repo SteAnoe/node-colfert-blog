@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Post = require('../models/Post');
 const User = require('../models/User');
+const Comment = require('../models/Comment');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 let isLoggedIn = false; 
@@ -90,7 +91,7 @@ router.get('/dashboard', authMiddleware, async (req, res) => {
 
         // Modify the query to fetch posts only for the logged-in user
         const data = await Post.find({ user: req.userId });
-
+        
         const user = req.user;
         res.render('admin/dashboard', { locals, user, data, layout: adminLayout });
     } catch (error) {
@@ -217,6 +218,47 @@ router.post('/register', async (req, res) => {
     } catch (error) {
         console.log(error)
     }   
+});
+
+
+// ADMIN - NEW COMMENT | POST
+router.post('/add-comment', authMiddleware, async (req, res) => {
+    try {
+        const locals = {
+            title: "Add Comment",
+            user: req.user, // Include user information
+        };
+        console.log(locals.user)
+        const postId = req.body.postId; // Assuming postId is sent in the request body
+        const newComment = new Comment({
+            body: req.body.body,
+            user: req.userId,
+        });
+        
+        const post = await Post.findById(postId);
+        
+        if (!post) {
+            return res.status(404).json({ message: 'Post not found' });
+        }
+
+        post.comments.push(newComment);
+        await post.save();
+
+        // Fetch the post again with the populated comments
+        const updatedPost = await Post.findById(postId).populate({
+            path: 'user',
+            select: 'username', // Only select the necessary fields
+        }).populate({
+            path: 'comments.user',
+            select: 'username', // Only select the necessary fields
+        });
+        console.log(updatedPost)
+        res.render('post', { locals, data: updatedPost, isLoggedIn, currentRoute: `/post/${postId}` });
+    } catch (error) {
+        console.log(error);
+        // Handle errors and possibly render an error page
+        res.status(500).render('error', { locals, error });
+    }
 });
 
 module.exports = { router, isLoggedIn, authMiddleware, getIsLoggedIn };

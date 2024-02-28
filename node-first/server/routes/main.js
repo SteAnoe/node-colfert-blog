@@ -20,17 +20,27 @@ router.get('/post/:id', async (req, res) => {
     try {
         let slug = req.params.id;
         console.log('post get, sono loggato?', admin.getIsLoggedIn())
-        const data = await Post.findById(slug).populate('user'); // Utilizza populate per ottenere i dati dello user
+
+        // Populate both 'user' and 'comments.user' fields
+        const data = await Post.findById(slug).populate({
+            path: 'user',
+            select: 'username', // Only select the necessary fields
+        }).populate({
+            path: 'comments.user',
+            select: 'username', // Only select the necessary fields
+        });
 
         const locals = {
             title: data.title
         }
 
+        console.log(data.comments)
         res.render('post', { locals, data, isLoggedIn: admin.getIsLoggedIn(), currentRoute: `/post/${slug}` })
     } catch (error) {
         console.log(error)
     }
 });
+
 // POST | POST - search
 router.post('/search', async (req, res) => {
     try {
@@ -55,11 +65,6 @@ router.post('/search', async (req, res) => {
         console.log(error)
     }   
 });
-
-
-
-
-
 
 
 

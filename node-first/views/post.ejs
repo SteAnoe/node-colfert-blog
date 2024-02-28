@@ -5,7 +5,20 @@
 </article>
 <% if (isLoggedIn) { %>
     <form action="/add-comment" method="POST">
-        <label for="comment"><b>Add comment</b></label>
-        <textarea name="comment" id="comment" cols="30" rows="10"></textarea>
+        <input type="hidden" name="postId" value="<%= data._id %>">
+        <label for="body"><b>Add comment</b></label>
+        <textarea name="body" id="body" cols="30" rows="10"></textarea>
+        <input type="submit" value="Add comment" class="btn">
     </form>    
 <% } %>
+<% if (Array.isArray(data.comments) && data.comments.length > 0) { %>
+    <h2>Comments</h2> 
+     <% data.comments.forEach(comment => { %>      
+            <li>
+                <span>By: <%= comment.user.username %></span>
+                <span><%= comment.body %></span>
+                <span class="article-list__date"><%= comment.createdAt.toDateString() %></span>
+            </li>
+        <% }) %>
+<% } %>
+
