@@ -1,0 +1,11 @@
+<h1><%= data.title %></h1>
+<p>Scritto da: <%= data.user.username %></p>
+<article class="article">
+    <%= data.body %>
+</article>
+<% if (isLoggedIn) { %>
+    <form action="/add-comment" method="POST">
+        <label for="comment"><b>Add comment</b></label>
+        <textarea name="comment" id="comment" cols="30" rows="10"></textarea>
+    </form>    
+<% } %>
