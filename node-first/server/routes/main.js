@@ -2,14 +2,17 @@ const express = require('express');
 const router = express.Router();
 const Post = require('../models/Post');
 const admin = require('./admin');
+
 // HOME | GET
 router.get('', async (req, res) => {
     try {
         const locals = {
-            title: "Node First Project"
+            title: "Colfert Blog"
         }
-        const data = await Post.find();
-        res.render('index', {locals, data, currentRoute: '/'})
+        const user = req.session.user
+        const data = await Post.find().sort({ createdAt: -1 });
+        
+        res.render('index', {locals, user, isLoggedIn: admin.getIsLoggedIn(), data, currentRoute: '/'})
     } catch (error) {
         console.log(error)
     }   
@@ -21,21 +24,20 @@ router.get('/post/:id', async (req, res) => {
         let slug = req.params.id;
         console.log('post get, sono loggato?', admin.getIsLoggedIn())
 
-        // Populate both 'user' and 'comments.user' fields
         const data = await Post.findById(slug).populate({
             path: 'user',
-            select: 'username', // Only select the necessary fields
+            select: 'username', 
         }).populate({
             path: 'comments.user',
-            select: 'username', // Only select the necessary fields
+            select: 'username', 
         });
 
         const locals = {
             title: data.title
         }
-
+        const user = req.session.user
         console.log(data.comments)
-        res.render('post', { locals, data, isLoggedIn: admin.getIsLoggedIn(), currentRoute: `/post/${slug}` })
+        res.render('post', { locals, user, data, isLoggedIn: admin.getIsLoggedIn(), currentRoute: `/post/${slug}` })
     } catch (error) {
         console.log(error)
     }
@@ -70,7 +72,8 @@ router.post('/search', async (req, res) => {
 
 // ABOUT | GET
 router.get('/about', (req, res) => {
-    res.render('about', {currentRoute: '/about'})
+    const user = req.session.user
+    res.render('about',  { user, isLoggedIn: admin.getIsLoggedIn(), currentRoute: '/about'})
 });
 
 

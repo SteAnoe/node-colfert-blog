@@ -1,6 +1,13 @@
 <div class="admin-title">
   <% if (user != undefined) { %>
     <h1>Welcome, <%= user.username %>!</h1>  
+    <% if (user.avatar) { %>
+      <img src="../../uploads/<%= user.avatar.data %>" alt="User Avatar" width="100px" height="100px">
+    <% } %>
+    <form action="/edit-user?_method=PUT" method="POST" enctype="multipart/form-data">
+      <input type="file" name="avatar">
+      <input type="submit">
+    </form>
   <% } %>
   <% if (user && user.role === 'admin') { %>
     <a href="/add-post" class="button">+ Add New</a>

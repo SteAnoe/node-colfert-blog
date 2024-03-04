@@ -1,6 +1,6 @@
 <div class="author">
-    <h1 class="author__heading">Hi, I am Ste.</h1>
-    <p class="author__body">Web Developer</p>
+    <h1 class="author__heading">Colfert Blog</h1>
+    <p class="author__body">Del testo</p>
 </div>
 
 <img src="/img/hero-image.webp" alt="" width="981" height="528">
@@ -11,9 +11,24 @@
         <% data.forEach(post => { %>      
             <li>
                 <a href="/post/<%= post._id %>">
-                    <span><%= post.title %></span>
-                    <span class="article-list__date"><%= post.createdAt.toDateString() %></span>
+                    <div >
+                        <span class="text-danger text-uppercase"><b><%= post.title %></b></span>
+                        <span class="article-list__date"><%= post.createdAt.toDateString() %></span>
+                    </div>
+                    <% if (post.body.length > 50) { %>
+                        <article id="postBody<%= post._id %>" class="shortened">
+                            <%= post.body.slice(0, 50) + '...' %>
+                        </article>
+                       
+                    <% } else { %>
+                        <article id="postBody<%= post._id %>">
+                            <%= post.body %>
+                        </article>
+                    <% } %>
                 </a>
+                <% if (post.body.length > 50) { %>
+                <button class="btn-post" onclick="toggleContent('<%= post._id %>', '<%= post.body %>')">Show More</button>
+                <% } %>
             </li>
         <% }) %>
     </ul>

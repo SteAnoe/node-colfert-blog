@@ -7,6 +7,8 @@ const cookieParser = require('cookie-parser');
 const MongoStore = require('connect-mongo');
 const session = require('express-session');
 
+
+
 const connectDB = require('./server/config/db');
 const {isActiveRoute} = require('./server/helpers/routeHelpers');
 const app = express();
@@ -22,6 +24,9 @@ app.use(methodOverride('_method'));
 app.use(session({
     secret: 'keyboard cat',
     resave: false,
+    cookie: {
+        maxAge: 3 * 24 * 60 * 60 * 1000,
+    },
     saveUninitialized: true,
     store: MongoStore.create({
         mongoUrl: process.env.MONGODB_URI
@@ -45,3 +50,4 @@ app.use('/', router);
 app.listen(PORT, () =>{
     console.log(`App listening on port ${PORT}`);
 });
+

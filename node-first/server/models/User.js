@@ -15,7 +15,11 @@ const UserSchema = new Schema({
         type: String,
         enum: ['admin', 'user'], 
         default: 'user'
-    }
+    },
+    avatar: {
+        data: Buffer,
+        contentType: String 
+    },
 })
 
 module.exports = mongoose.model('User', UserSchema)

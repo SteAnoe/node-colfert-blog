@@ -1,20 +1,38 @@
 <header class="header">
-    <a href="/" class="header__logo">NodeJs</a>
+    <a href="/" class="header__logo">
+        <img style="width: 20%;" src="https://www.giallocolfert.com/libs/v0001/res/logo-giallo-trasp.png" alt="">
+        Colfert Blog
+    </a>
     <nav class="header__nav">
         <ul>
             <li>
-                <a href="/" class="<%= isActiveRoute('/', currentRoute) %>">Home</a>
+                <a id="homeBtn" href="/" class="navBtn">Home</a>
             </li>
             <li>
-                <a href="/about" class="<%= isActiveRoute('/about', currentRoute) %>">About</a>
+                <a id="aboutBtn" href="/about" class="navBtn">About</a>
             </li>
-            <li>
+        <!--<li>
                 <a href="/admin" class="">Login</a>
-            </li>
+            </li>-->
         </ul>
     </nav>
     <div class="header__button">
-        <button class="searchBtn" aria-expanded="false">
+        <% if (user && user.username) { %>
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <%= user.username %>
+                </button>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="/dashboard">Dashboard</a></li>
+                  <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                </ul>
+              </div>
+            <!-- <a id="loginBtn" href="/dashboard" class="navBtn">  </a> -->
+        <% } else { %>
+            <a id="loginBtn" href="/admin" class="navBtn">Login</a>
+        <% } %>
+        
+    <!--<button class="searchBtn" aria-expanded="false">
             Search
             <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
@@ -23,6 +41,8 @@
                 <path d="M14.875 14.875L11.7938 11.7938" stroke="black" stroke-width="2" stroke-linecap="round"
                     stroke-linejoin="round" />
             </svg>
-        </button>
+        </button>-->
     </div>
 </header>
+
+<!-- <a href="/" class="EJSOUT isActiveRoute('/', currentRoute) %>">Home</a> -->

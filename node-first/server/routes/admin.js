@@ -8,6 +8,36 @@ const jwt = require('jsonwebtoken');
 let isLoggedIn = false; 
 const adminLayout = '../views/layouts/admin'
 const jwtSecret = process.env.JWT_SECRET 
+const multer = require('multer');
+const path = require('path');
+
+let storage = multer.diskStorage({
+    destination: function (req,file,cb) {
+        cb(null, 'public/uploads/')
+    },
+    filename: function (req,file,cb){
+        let ext = path.extname(file.originalname)
+        cb(null, Date.now() + ext)
+    }
+})
+let upload = multer({ 
+    storage: storage, 
+    fileFilter: function (req, file, callback) {
+        if(
+            file.mimetype === 'image/jpeg' ||
+            file.mimetype === 'image/jpg' ||
+            file.mimetype === 'image/webp' ||
+            file.mimetype === 'image/png'
+        ){ 
+            callback(null, true)
+        } else { 
+            callback(null, false)
+        }
+    },
+    limits:{
+        fileSize: 1024 * 1024 * 2
+    }
+});
 
 const authMiddleware = async (req, res, next) => {
     const token = req.cookies.token;
@@ -18,8 +48,8 @@ const authMiddleware = async (req, res, next) => {
     if(!token){
         isLoggedIn = false;
         console.log('non ho il token, sono loggato?', isLoggedIn)
-        return res.render('admin/index', {locals, layout: adminLayout})
-
+        //return res.render('admin/index', {locals, layout: adminLayout})
+        return res.redirect('admin');
     }
 
     try{
@@ -47,7 +77,7 @@ router.get('/admin', async (req, res) => {
         if(isLoggedIn){
             res.redirect('/dashboard');
         }
-        res.render('admin/index', {locals, user, message, layout: adminLayout})
+        res.render('admin/index', {locals, isLoggedIn: getIsLoggedIn(), user, message, layout: adminLayout})
     } catch (error) {
         console.log(error)
     }   
@@ -59,10 +89,12 @@ router.post('/admin', async (req, res) => {
         const locals = {
             title: "Admin"
         }
-        
+         
         const {username, password} = req.body;
         const user = await User.findOne({username})
-        
+        req.session.authenticated = true
+        req.session.user = user
+        console.log(req.session.user)
         if(!user) {
             return res.status(401).json({message: 'Invalid credentials'})
         }
@@ -93,7 +125,7 @@ router.get('/dashboard', authMiddleware, async (req, res) => {
         const data = await Post.find({ user: req.userId });
         
         const user = req.user;
-        res.render('admin/dashboard', { locals, user, data, layout: adminLayout });
+        res.render('admin/dashboard', { locals, isLoggedIn: getIsLoggedIn(), user, data, layout: adminLayout });
     } catch (error) {
         console.log(error);
     }
@@ -106,8 +138,9 @@ router.get('/add-post', authMiddleware, async (req, res) => {
             title: "Add Post",
             user: req.user, // Include user information
         };
+        const user = req.user;
         const data = await Post.find();
-        res.render('admin/add-post', { locals, data, layout: adminLayout });
+        res.render('admin/add-post', { locals, isLoggedIn: getIsLoggedIn(), user, data, layout: adminLayout });
     } catch (error) {
         console.log(error);
     }
@@ -143,8 +176,9 @@ router.get('/edit-post/:id', authMiddleware, async (req, res) => {
             title: "Edit Post",
             user: req.user, // Include user information
         };
+        const user = req.user;
         const data = await Post.findOne({ _id: req.params.id });
-        res.render('admin/edit-post', { locals, data, layout: adminLayout });
+        res.render('admin/edit-post', { locals, isLoggedIn: getIsLoggedIn(), user, data, layout: adminLayout });
     } catch (error) {
         console.log(error);
     }
@@ -186,6 +220,7 @@ router.delete('/delete-post/:id', authMiddleware, async (req, res) => {
 router.get('/logout', (req, res) => {
     res.clearCookie('token');
     isLoggedIn = false;
+    req.session.destroy();   
     console.log('sloggo, sono loggato?', isLoggedIn)
     res.redirect('/');
 });
@@ -226,7 +261,7 @@ router.post('/add-comment', authMiddleware, async (req, res) => {
     try {
         const locals = {
             title: "Add Comment",
-            user: req.user, // Include user information
+            //user: req.user, // Include user information
         };
         console.log(locals.user)
         const postId = req.body.postId; // Assuming postId is sent in the request body
@@ -234,7 +269,7 @@ router.post('/add-comment', authMiddleware, async (req, res) => {
             body: req.body.body,
             user: req.userId,
         });
-        
+        const user = req.session.user
         const post = await Post.findById(postId);
         
         if (!post) {
@@ -253,12 +288,42 @@ router.post('/add-comment', authMiddleware, async (req, res) => {
             select: 'username', // Only select the necessary fields
         });
         console.log(updatedPost)
-        res.render('post', { locals, data: updatedPost, isLoggedIn, currentRoute: `/post/${postId}` });
+        res.render('post', { locals, user, data: updatedPost, isLoggedIn, currentRoute: `/post/${postId}` });
     } catch (error) {
         console.log(error);
         // Handle errors and possibly render an error page
         res.status(500).render('error', { locals, error });
     }
 });
+
+
+// ADMIN EDIT || PUT
+router.put('/edit-user', upload.single('avatar'), authMiddleware, async (req, res) => {
+    try {
+        const userId = req.userId;
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // console.log('Received file:', req.file); // Log the file information
+        
+        // Update the user's avatar data
+        user.avatar = {
+            data: req.file.filename,
+            contentType: req.file.mimetype,
+        };
+        console.log('te prego more', user)
+        // Use findByIdAndUpdate to update the user
+        await User.findByIdAndUpdate(userId, { avatar: user.avatar });
+
+        res.redirect('/dashboard');
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
+
 
 module.exports = { router, isLoggedIn, authMiddleware, getIsLoggedIn };
