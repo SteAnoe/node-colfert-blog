@@ -77,10 +77,13 @@ img {
   max-width: 982px;
   margin: 0 auto;
   padding: 0 10px;
+  min-height: 100vh;
+  display: grid;
+  align-items: center;
 }
 
 .main {
-  padding: 100px 0;
+  padding-top: 150px;
 }
 
 /* Hero Section */

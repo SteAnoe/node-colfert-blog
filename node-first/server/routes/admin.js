@@ -226,13 +226,29 @@ router.get('/logout', (req, res) => {
     res.redirect('/');
 });
 
+//ADMIN - REGISTER | GET
+router.get('/register', async (req, res) => {
+    try {
+        const locals = {
+            title: "Admin"
+        }
+        const user = undefined
+        const message = ''
+        if(isLoggedIn){
+            res.redirect('/dashboard');
+        }
+        res.render('admin/register', {locals, isLoggedIn: getIsLoggedIn(), user, message, layout: adminLayout})
+    } catch (error) {
+        console.log(error)
+    }   
+});
 //ADMIN - REGISTER | POST
 router.post('/register', async (req, res) => {
     try {
         const locals = {
             title: "Admin"
         }
-        
+        console.log('can')
         const {username, password} = req.body;
         const avatar = {
             data: '/',

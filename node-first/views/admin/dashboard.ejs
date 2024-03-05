@@ -1,6 +1,6 @@
 <div class="admin-title">
   <% if (user != undefined) { %>
-    <h1>Welcome, <%= user.username %>!</h1>  
+    <h1><%= user.username %></h1>  
   <% } %>
   <% if (user && user.role === 'admin') { %>
     <a href="/add-post" class="button">+ Add New</a>
@@ -20,10 +20,10 @@
     <input type="file" id="fileInput" name="avatar" class="custom-file-input" style="display: none;" onchange="handleFileChange()">
     <input type="submit" id="submitButton" value="Submit" style="display: none;">
   </form>
-  
-  
 </div>
-  
+
+
+
 <% if (data && data.length > 0) { %>
 <h2 style="margin-top: 30px">Posts</h2> 
 <ul class="admin-posts">
