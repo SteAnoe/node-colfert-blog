@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const fs = require('fs').promises;
 const Post = require('../models/Post');
 const User = require('../models/User');
 const Comment = require('../models/Comment');
@@ -233,13 +234,17 @@ router.post('/register', async (req, res) => {
         }
         
         const {username, password} = req.body;
+        const avatar = {
+            data: '/',
+            contentType: 'image/jpeg',
+        };
         const hashedPassword = await bcrypt.hash(password, 10);
         try {
             const existingUser = await User.findOne({ username });
             if (existingUser) {
                 return res.status(409).json({ message: 'Username already in use' });
             }
-            const user = await User.create({username,password: hashedPassword})
+            const user = await User.create({username,password: hashedPassword, avatar})
             const message = `User Created ${user.username}`
             //res.status(201).json({message: 'User Created', user})
             res.render('admin/index', {locals, message, user, layout: adminLayout})
@@ -303,19 +308,20 @@ router.put('/edit-user', upload.single('avatar'), authMiddleware, async (req, re
         const userId = req.userId;
         const user = await User.findById(userId);
 
+        if (user.avatar.data != '/' && user.avatar.data != undefined) {
+            const prevImagePath = path.join(__dirname, '..' , '..', 'public', 'uploads', user.avatar.data);
+            await fs.unlink(prevImagePath);
+        }
+
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        // console.log('Received file:', req.file); // Log the file information
-        
-        // Update the user's avatar data
         user.avatar = {
             data: req.file.filename,
             contentType: req.file.mimetype,
         };
-        console.log('te prego more', user)
-        // Use findByIdAndUpdate to update the user
+
         await User.findByIdAndUpdate(userId, { avatar: user.avatar });
 
         res.redirect('/dashboard');

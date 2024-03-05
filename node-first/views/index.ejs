@@ -3,7 +3,7 @@
     <p class="author__body">Del testo</p>
 </div>
 
-<img src="/img/hero-image.webp" alt="" width="981" height="528">
+<!-- <img src="/img/hero-image.webp" alt="" width="981" height="528"> -->
 
 <section class="articles">
     <h2 class="articles__heading">Latest Posts</h2>
@@ -11,7 +11,11 @@
         <% data.forEach(post => { %>      
             <li>
                 <a href="/post/<%= post._id %>">
-                    <div >
+                    <div class="name-img-div">
+                        <img style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;" src="../uploads/<%= post.user.avatar.data %>" alt="">
+                        <span class="creator-name"><%= post.user.username %></span>
+                    </div>
+                    <div class="title-date-div"> 
                         <span class="text-danger text-uppercase"><b><%= post.title %></b></span>
                         <span class="article-list__date"><%= post.createdAt.toDateString() %></span>
                     </div>

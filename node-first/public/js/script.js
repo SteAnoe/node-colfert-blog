@@ -69,3 +69,39 @@ function toggleContent(postId, fullContent) {
     button.textContent = 'Show More';
   }
 }
+
+async function handleFileChange() {
+  const fileName = document.getElementById('fileInput').files[0]?.name;
+
+  if (fileName) {
+    const label = document.querySelector('.custom-file-input-label');
+    label.setAttribute('data-file-name', fileName);
+    label.classList.add('has-file');
+
+    // Disable the file input and submit button during the form submission
+    document.getElementById('fileInput').disabled = true;
+    document.getElementById('submitButton').disabled = true;
+
+    // Simulate an asynchronous operation (replace this with your actual logic)
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    // Enable the file input and submit button after the asynchronous operation
+    document.getElementById('fileInput').disabled = false;
+    document.getElementById('submitButton').disabled = false;
+
+    // Submit the form
+    document.getElementById('customForm').submit();
+  }
+}
+
+document.querySelector('.custom-file-input-label').addEventListener('click', function (e) {
+  const fileInput = document.getElementById('fileInput');
+
+  if (e.target !== fileInput) {
+    // If the click is not directly on the file input, trigger the click
+    fileInput.click();
+  }
+  
+  // Prevent the default click behavior to avoid opening the file manager twice
+  e.preventDefault();
+});

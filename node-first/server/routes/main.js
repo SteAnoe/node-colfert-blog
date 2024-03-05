@@ -10,8 +10,8 @@ router.get('', async (req, res) => {
             title: "Colfert Blog"
         }
         const user = req.session.user
-        const data = await Post.find().sort({ createdAt: -1 });
-        
+        const data = await Post.find().sort({ createdAt: -1 }).populate('user', 'username avatar');;
+        console.log(data)
         res.render('index', {locals, user, isLoggedIn: admin.getIsLoggedIn(), data, currentRoute: '/'})
     } catch (error) {
         console.log(error)

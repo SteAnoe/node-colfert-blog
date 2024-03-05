@@ -18,7 +18,7 @@
     </nav>
     <div class="header__button">
         <% if (user && user.username) { %>
-            <div class="dropdown">
+            <div id="dropdown" class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <%= user.username %>
                 </button>

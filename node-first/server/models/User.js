@@ -17,7 +17,7 @@ const UserSchema = new Schema({
         default: 'user'
     },
     avatar: {
-        data: Buffer,
+        data: String,
         contentType: String 
     },
 })

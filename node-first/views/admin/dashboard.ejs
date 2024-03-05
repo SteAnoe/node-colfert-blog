@@ -1,40 +1,50 @@
 <div class="admin-title">
   <% if (user != undefined) { %>
     <h1>Welcome, <%= user.username %>!</h1>  
-    <% if (user.avatar) { %>
-      <img src="../../uploads/<%= user.avatar.data %>" alt="User Avatar" width="100px" height="100px">
-    <% } %>
-    <form action="/edit-user?_method=PUT" method="POST" enctype="multipart/form-data">
-      <input type="file" name="avatar">
-      <input type="submit">
-    </form>
   <% } %>
   <% if (user && user.role === 'admin') { %>
     <a href="/add-post" class="button">+ Add New</a>
   <% } %>
 </div>
+
+<div class="img-container">
+  <% if (user.avatar.data != '/' && user.avatar.data != undefined) { %>
+    <img src="../../uploads/<%= user.avatar.data %>" alt="User Avatar" width="100px" height="100px">
+  <% } else { %>
+    <img src="../../img/def-avatar.png" alt="User Avatar" width="100px" height="100px">
+  <% } %>
+  <form id="customForm" action="/edit-user?_method=PUT" method="POST" enctype="multipart/form-data">
+    <label for="fileInput" class="custom-file-input-label">
+      <div class="custom-file-input-button"></div>
+    </label>
+    <input type="file" id="fileInput" name="avatar" class="custom-file-input" style="display: none;" onchange="handleFileChange()">
+    <input type="submit" id="submitButton" value="Submit" style="display: none;">
+  </form>
   
-  <% if (data && data.length > 0) { %>
-  <h2 style="margin-top: 30px">Posts</h2> 
-  <ul class="admin-posts">
-      <% data.forEach(post => { %>
-       
-        <li>
-          <a href="/post/<%= post._id %>"> 
-            <%= post.title %> &nearr;
-          </a>
-          <div class="admin-post-controls">
-            <a href="/edit-post/<%= post._id %>" class="btn">Edit</a>
-            
-            <form action="/delete-post/<%= post._id %>?_method=DELETE" method="POST">
-              <input type="submit" value="Delete" class="btn-delete btn">
-            </form>
-    
-          </div>
-    
-        </li>
-    
-      <% }) %>
+  
+</div>
+  
+<% if (data && data.length > 0) { %>
+<h2 style="margin-top: 30px">Posts</h2> 
+<ul class="admin-posts">
+    <% data.forEach(post => { %>
      
-    </ul>
-    <% } %>
+      <li>
+        <a href="/post/<%= post._id %>"> 
+          <%= post.title %> &nearr;
+        </a>
+        <div class="admin-post-controls">
+          <a href="/edit-post/<%= post._id %>" class="btn">Edit</a>
+          
+          <form action="/delete-post/<%= post._id %>?_method=DELETE" method="POST">
+            <input type="submit" value="Delete" class="btn-delete btn">
+          </form>
+  
+        </div>
+  
+      </li>
+  
+    <% }) %>
+   
+</ul>
+<% } %>
