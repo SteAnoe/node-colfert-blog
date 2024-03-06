@@ -1,0 +1,18 @@
+<ul>
+    <% users.forEach(user => { %>      
+        <li>
+            <a href="/users/<%= user._id %>" style="display: flex; align-items: center;">
+                <div style="margin-right: 15px;">
+                    <% if (user.avatar.data != '/' && user.avatar.data != undefined) { %>
+                        <img style="border-radius: 50%; width: 40px; height: 40px;" src="../../uploads/<%= user.avatar.data %>" alt="User Avatar" width="100px" height="100px">
+                    <% } else { %>
+                        <img style="border-radius: 50%; width: 40px; height: 40px;" src="../../img/C_bianco.png" alt="User Avatar" width="100px" height="100px">
+                    <% } %>
+                </div>
+                <div>
+                    <%= user.username %>
+                </div>  
+            </a>
+        </li>
+    <% }) %>
+</ul>

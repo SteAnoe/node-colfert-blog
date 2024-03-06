@@ -1,0 +1,14 @@
+<div class="admin-title">  
+    <h1><%= selectedUser.username %></h1>   
+</div>
+  
+  <div class="img-container">
+    <% if (selectedUser.avatar.data != '/' && selectedUser.avatar.data != undefined) { %>
+      <img src="../../uploads/<%= selectedUser.avatar.data %>" alt="User Avatar" width="100px" height="100px">
+    <% } else { %>
+      <img src="../../img/C_bianco.png" alt="User Avatar" width="100px" height="100px">
+    <% } %>
+
+  </div>
+
+  

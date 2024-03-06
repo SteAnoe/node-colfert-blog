@@ -11,7 +11,7 @@
   <% if (user.avatar.data != '/' && user.avatar.data != undefined) { %>
     <img src="../../uploads/<%= user.avatar.data %>" alt="User Avatar" width="100px" height="100px">
   <% } else { %>
-    <img src="../../img/def-avatar.png" alt="User Avatar" width="100px" height="100px">
+    <img src="../../img/C_bianco.png" alt="User Avatar" width="100px" height="100px">
   <% } %>
   <form id="customForm" action="/edit-user?_method=PUT" method="POST" enctype="multipart/form-data">
     <label for="fileInput" class="custom-file-input-label">

@@ -77,72 +77,39 @@ function toggleContent(postId, fullContent) {
 }
 
 async function handleFileChange() {
-  const photoInput = document.getElementById('fileInput');
-  const fileName = photoInput.files[0]?.name;
-  const photoFeedback = document.getElementById('photo-feedback');
-  const allowedTypesPhoto = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/webp'];
-  const maxSizeInBytes = 1024 * 1024; // 1MB
+  const fileInput = document.getElementById('fileInput');
+  const feedbackDiv = document.getElementById('photo-feedback');
+  
+  feedbackDiv.innerText = '';
+  feedbackDiv.style.display = 'none';
 
-  if (fileName) {
-    const isValidType = photoInput.files.length > 0 && allowedTypesPhoto.includes(photoInput.files[0].type);
-    const isValidSize = photoInput.files.length > 0 && photoInput.files[0].size <= maxSizeInBytes;
+  const file = fileInput.files[0];
 
-    if (!isValidType || !isValidSize) {
-      photoInput.classList.add('is-invalid');
-      if (!isValidType) {
-        photoFeedback.textContent = 'Il file caricato deve essere PNG, JPG, JPEG, o GIF.';
-      } else {
-        photoFeedback.textContent = 'Il file caricato deve essere inferiore a 1MB.';
-      }
-
-      // Reset the label and enable the file input and submit button
-      resetFileInput();
-      return; // Prevent further execution
+  if (file) {
+    if (file.size > 1024 * 1024 * 2 ) { 
+      feedbackDiv.innerText = "Dimensione dell'immagine superiore a 2MB";
+      feedbackDiv.style.display = 'block';
+      return; 
     }
 
-    // Disable the file input and submit button during the form submission
-    photoInput.disabled = true;
+    const allowedExtensions = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
+    const fileExtension = file.name.toLowerCase().slice((file.name.lastIndexOf(".") - 1 >>> 0) + 2);
+    
+    if (!allowedExtensions.includes('.' + fileExtension)) {
+      feedbackDiv.innerText = 'Estensione del file non valido. Le estensioni permesse sono: ' + allowedExtensions.join(', ');
+      feedbackDiv.style.display = 'block';
+      return;
+    }
+
+    fileInput.disabled = true;
     document.getElementById('submitButton').disabled = true;
 
-    // Simulate an asynchronous operation (replace this with your actual logic)
     await new Promise(resolve => setTimeout(resolve, 1000));
 
-    // Enable the file input and submit button after the asynchronous operation
-    photoInput.disabled = false;
+    fileInput.disabled = false;
     document.getElementById('submitButton').disabled = false;
 
-    // Submit the form
     document.getElementById('customForm').submit();
   }
 }
 
-function resetFileInput() {
-  const label = document.querySelector('.custom-file-input-label');
-  const photoInput = document.getElementById('fileInput');
-
-  label.removeAttribute('data-file-name');
-  label.classList.remove('has-file');
-  photoInput.value = ''; // Clear the input value
-
-  // Enable the file input and submit button
-  photoInput.disabled = false;
-  document.getElementById('submitButton').disabled = false;
-
-  // Clear any previous error messages
-  document.getElementById('photo-feedback').textContent = '';
-}
-
-document.querySelector('.custom-file-input-label').addEventListener('click', function (e) {
-  const fileInput = document.getElementById('fileInput');
-
-  if (e.target !== fileInput) {
-    // If the click is not directly on the file input, trigger the click
-    fileInput.click();
-  }
-  
-  // Prevent the default click behavior to avoid opening the file manager twice
-  e.preventDefault();
-});
-
-const photoInput = document.getElementById('fileInput');
-photoInput.addEventListener('change', handleFileChange);

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Post = require('../models/Post');
+const User = require('../models/User');
 const admin = require('./admin');
 
 // HOME | GET
@@ -9,10 +10,11 @@ router.get('', async (req, res) => {
         const locals = {
             title: "Colfert Blog"
         }
+        const users = await User.find()
         const user = req.session.user
         const data = await Post.find().sort({ createdAt: -1 }).populate('user', 'username avatar');;
         console.log(data)
-        res.render('index', {locals, user, isLoggedIn: admin.getIsLoggedIn(), data, currentRoute: '/'})
+        res.render('index', {locals, users, user, isLoggedIn: admin.getIsLoggedIn(), data, currentRoute: '/'})
     } catch (error) {
         console.log(error)
     }   
