@@ -52,6 +52,12 @@ document.addEventListener('DOMContentLoaded', function() {
     if (activeLink) {
       activeLink.classList.add('active');
     }
+  } else if (window.location.pathname === '/') {
+    const homeLink = document.getElementById('homeBtn');
+    if (homeLink) {
+      homeLink.classList.add('active');
+      localStorage.setItem('activeLink', 'homeBtn');
+    }
   }
 });
 
@@ -104,4 +110,26 @@ document.querySelector('.custom-file-input-label').addEventListener('click', fun
   
   // Prevent the default click behavior to avoid opening the file manager twice
   e.preventDefault();
+});
+
+const photoInput = document.getElementById('fileInput');
+const photoFeedback = document.getElementById('photo-feedback');
+const allowedTypesPhoto = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/webp'];
+const maxSizeInBytes = 1024 * 1024; // 1MB
+
+photoInput.addEventListener('change', function() {
+  const isValidType = photoInput.files.length > 0 && allowedTypesPhoto.includes(photoInput.files[0].type);
+  const isValidSize = photoInput.files.length > 0 && photoInput.files[0].size <= maxSizeInBytes;
+
+  if (!isValidType || !isValidSize) {
+    photoInput.classList.add('is-invalid');
+    if (!isValidType) {
+      photoFeedback.textContent = 'Il file caricato deve essere PNG, JPG, JPEG, o GIF.';
+    } else {
+      photoFeedback.textContent = 'Il file caricato deve essere inferiore a 1MB.';
+    }
+  } else {
+    photoInput.classList.remove('is-invalid');
+    photoFeedback.textContent = '';
+  }
 });

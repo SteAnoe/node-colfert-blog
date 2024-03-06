@@ -347,5 +347,4 @@ router.put('/edit-user', upload.single('avatar'), authMiddleware, async (req, re
     }
 });
 
-
 module.exports = { router, isLoggedIn, authMiddleware, getIsLoggedIn };

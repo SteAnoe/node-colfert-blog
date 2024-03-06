@@ -19,12 +19,12 @@
     <div class="header__button">
         <% if (user && user.username) { %>
             <div id="dropdown" class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <button class="btn btn-secondary dropdown-toggle navBtn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <%= user.username %>
                 </button>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="/dashboard">Dashboard</a></li>
-                  <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                  <li><a class="dropdown-item navBtn" href="/dashboard">Dashboard</a></li>
+                  <li><a class="dropdown-item navBtn" href="/logout">Logout</a></li>
                 </ul>
               </div>
             <!-- <a id="loginBtn" href="/dashboard" class="navBtn">  </a> -->
