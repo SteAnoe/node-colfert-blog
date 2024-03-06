@@ -1,21 +1,38 @@
-<header class="header">
-    <a href="/" class="header__logo">Admin Panel</a>
-    <nav class="header__nav">
-        <ul>
-            <li>
-                <a href="/" class="">Home</a>
-            </li>
-            <li>
-                <a href="/about" class="">About</a>
-            </li>
-            <li>
-                <a href="/contact" class="">Contact</a>
-            </li>
-        </ul>
+<header class="">
+    <nav class="navbar navbar-expand-md bg-white" aria-label="Fourth navbar example">
+        <div class="container-fluid">
+            <a href="/" class="d-flex justify-content-center align-items-center">
+                <img style="width: 65px;" src="https://www.giallocolfert.com/libs/v0001/res/logo-giallo-trasp.png" alt="">
+                <span class="d-none d-md-block">Colfert Blog</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample04"
+                aria-controls="navbarsExample04" aria-expanded="true" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="navbar-collapse collapse" id="navbarsExample04" style="">
+                <ul class="navbar-nav ms-auto mb-2 mb-md-0">
+                    <li class="nav-item">
+                        <a id="homeBtn" class="nav-link navBtn" aria-current="page" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a id="aboutBtn" class="nav-link navBtn"  href="/about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a id="usersBtn" class="nav-link navbtn" href="/users">Users</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"
+                            aria-expanded="false">Dropdown</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Action</a></li>
+                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </nav>
-    <div class="header__button">
-        <a href="/logout">
-            Logout
-          </a>
-    </div>
+
 </header>
