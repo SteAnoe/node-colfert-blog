@@ -1,6 +1,6 @@
-<ul>
+<div class="row">
     <% users.forEach(user => { %>      
-        <li>
+        <div class="col-4">
             <a href="/users/<%= user._id %>" style="display: flex; align-items: center;">
                 <div style="margin-right: 15px;">
                     <% if (user.avatar.data != '/' && user.avatar.data != undefined) { %>
@@ -13,6 +13,6 @@
                     <%= user.username %>
                 </div>  
             </a>
-        </li>
+        </div>
     <% }) %>
-</ul>
+</div>
