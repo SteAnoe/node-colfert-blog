@@ -77,14 +77,18 @@ img {
   max-width: 982px;
   margin: 0 auto;
   padding: 0 10px;
-  min-height: 100vh;
+  min-height: calc(100vh - 55px);
   display: grid;
   align-items: center;
 }
 
-.main {
-  padding-top: 150px;
+.distance_container{
+  margin-top: 60px;
 }
+
+.main {
+  /*padding-top: 70px;
+*/}
 
 /* Hero Section */
 .hero-image {
@@ -236,9 +240,13 @@ img {
 
 .author__body {
   font-size: var(--font-size-md);
-  margin: 5px 0 40px 0;
+  margin: 5px 0;
 }
 
+.articles{
+  position: relative;
+  top: -50px;
+}
 
 /* Home Article List */
 .articles__heading {
@@ -349,7 +357,7 @@ img {
 
 /* Footer */
 .footer {
-  margin: 4rem;
+  margin: 15px 0;
   text-align: center;
 }
 
