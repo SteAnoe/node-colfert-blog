@@ -1,5 +1,5 @@
-<header class="">
-    <nav class="navbar navbar-expand-md bg-white" aria-label="Fourth navbar example">
+<header class="header">
+    <nav class="navbar navbar-expand-md " aria-label="Fourth navbar example">
         <div class="container-fluid">
             <a href="/" class="d-flex justify-content-center align-items-center">
                 <img style="width: 65px;" src="https://www.giallocolfert.com/libs/v0001/res/logo-giallo-trasp.png" alt="">
@@ -21,15 +21,21 @@
                     <li class="nav-item">
                         <a id="usersBtn" class="nav-link navbtn" href="/users">Users</a>
                     </li>
+                    <% if (user && user.username) { %>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"
-                            aria-expanded="false">Dropdown</a>
+                            aria-expanded="false"><%= user.username %></a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
-                            <li><a class="dropdown-item" href="#">Another action</a></li>
-                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                            <li><a class="dropdown-item navBtn" href="/dashboard">Dashboard</a></li>
+                            <li><a class="dropdown-item navBtn" href="/logout">Logout</a></li>                       
                         </ul>
                     </li>
+                    <% } else { %>
+                    <li class="nav-item">
+                        <a id="loginBtn" href="/admin" class="nav-link navBtn">Login</a>
+                    </li>
+                    <% } %>
+                    
                 </ul>
             </div>
         </div>
