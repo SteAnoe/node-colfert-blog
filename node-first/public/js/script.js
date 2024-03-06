@@ -77,27 +77,59 @@ function toggleContent(postId, fullContent) {
 }
 
 async function handleFileChange() {
-  const fileName = document.getElementById('fileInput').files[0]?.name;
+  const photoInput = document.getElementById('fileInput');
+  const fileName = photoInput.files[0]?.name;
+  const photoFeedback = document.getElementById('photo-feedback');
+  const allowedTypesPhoto = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/webp'];
+  const maxSizeInBytes = 1024 * 1024; // 1MB
 
   if (fileName) {
-    const label = document.querySelector('.custom-file-input-label');
-    label.setAttribute('data-file-name', fileName);
-    label.classList.add('has-file');
+    const isValidType = photoInput.files.length > 0 && allowedTypesPhoto.includes(photoInput.files[0].type);
+    const isValidSize = photoInput.files.length > 0 && photoInput.files[0].size <= maxSizeInBytes;
+
+    if (!isValidType || !isValidSize) {
+      photoInput.classList.add('is-invalid');
+      if (!isValidType) {
+        photoFeedback.textContent = 'Il file caricato deve essere PNG, JPG, JPEG, o GIF.';
+      } else {
+        photoFeedback.textContent = 'Il file caricato deve essere inferiore a 1MB.';
+      }
+
+      // Reset the label and enable the file input and submit button
+      resetFileInput();
+      return; // Prevent further execution
+    }
 
     // Disable the file input and submit button during the form submission
-    document.getElementById('fileInput').disabled = true;
+    photoInput.disabled = true;
     document.getElementById('submitButton').disabled = true;
 
     // Simulate an asynchronous operation (replace this with your actual logic)
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     // Enable the file input and submit button after the asynchronous operation
-    document.getElementById('fileInput').disabled = false;
+    photoInput.disabled = false;
     document.getElementById('submitButton').disabled = false;
 
     // Submit the form
     document.getElementById('customForm').submit();
   }
+}
+
+function resetFileInput() {
+  const label = document.querySelector('.custom-file-input-label');
+  const photoInput = document.getElementById('fileInput');
+
+  label.removeAttribute('data-file-name');
+  label.classList.remove('has-file');
+  photoInput.value = ''; // Clear the input value
+
+  // Enable the file input and submit button
+  photoInput.disabled = false;
+  document.getElementById('submitButton').disabled = false;
+
+  // Clear any previous error messages
+  document.getElementById('photo-feedback').textContent = '';
 }
 
 document.querySelector('.custom-file-input-label').addEventListener('click', function (e) {
@@ -113,23 +145,4 @@ document.querySelector('.custom-file-input-label').addEventListener('click', fun
 });
 
 const photoInput = document.getElementById('fileInput');
-const photoFeedback = document.getElementById('photo-feedback');
-const allowedTypesPhoto = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/webp'];
-const maxSizeInBytes = 1024 * 1024; // 1MB
-
-photoInput.addEventListener('change', function() {
-  const isValidType = photoInput.files.length > 0 && allowedTypesPhoto.includes(photoInput.files[0].type);
-  const isValidSize = photoInput.files.length > 0 && photoInput.files[0].size <= maxSizeInBytes;
-
-  if (!isValidType || !isValidSize) {
-    photoInput.classList.add('is-invalid');
-    if (!isValidType) {
-      photoFeedback.textContent = 'Il file caricato deve essere PNG, JPG, JPEG, o GIF.';
-    } else {
-      photoFeedback.textContent = 'Il file caricato deve essere inferiore a 1MB.';
-    }
-  } else {
-    photoInput.classList.remove('is-invalid');
-    photoFeedback.textContent = '';
-  }
-});
+photoInput.addEventListener('change', handleFileChange);
