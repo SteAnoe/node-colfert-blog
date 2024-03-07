@@ -1,0 +1,60 @@
+<input type="text" id="searchTerm" placeholder="Search...">
+<button onclick="search()">Search</button>
+
+<div id="searchResults" class="d-flex">
+
+</div>
+<% if (books && books.length > 0) { %>
+    <h2 style="margin-top: 30px">Books</h2> 
+    <div class="d-flex">
+        <% books.forEach(book => { %>
+            <div class="card" style="width: 18rem;">
+              <img src="../../uploads/<%= book.img.data %>" class="card-img-top" alt="..." style="max-height: 400px;">
+              <div class="card-body">
+                <h5 class="card-title"><%= book.title %></h5>
+                <p class="card-text"><%= book.author %></p>             
+              </div>
+            </div>
+        <% }) %>      
+    </div>
+<% } %>
+
+<script>
+  async function search() {
+      const searchTerm = document.getElementById('searchTerm').value;
+      const searchResultsContainer = document.getElementById('searchResults');
+  
+      try {
+          const response = await fetch('/books', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ searchTerm }),
+          });
+          
+          const data = await response.json();
+          console.log(data)
+          
+          searchResultsContainer.innerHTML = '';
+          data.forEach(result => {
+              const resultItem = document.createElement('div');
+              resultItem.innerHTML = `
+              <div class="d-flex">      
+                <div class="card" style="width: 18rem;">
+                    <img src="../../uploads/${result.img.data}" class="card-img-top" alt="..." style="max-height: 400px;">
+                    <div class="card-body">
+                        <h5 class="card-title">${result.title}</h5>
+                        <p class="card-text">${result.author}</p>             
+                    </div>
+                </div>      
+              </div>
+              `;
+              searchResultsContainer.appendChild(resultItem);
+          });
+      } catch (error) {
+          console.error('Error during search:', error);
+      }
+  }
+  </script>
+  

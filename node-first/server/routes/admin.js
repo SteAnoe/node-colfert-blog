@@ -4,6 +4,7 @@ const fs = require('fs').promises;
 const Post = require('../models/Post');
 const User = require('../models/User');
 const Comment = require('../models/Comment');
+const Book = require('../models/Book');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 let isLoggedIn = false; 
@@ -67,7 +68,7 @@ const authMiddleware = async (req, res, next) => {
 }
 
 const getIsLoggedIn = () => isLoggedIn;
-// ADMIN | GET
+// ADMIN - LOG | GET
 router.get('/admin', async (req, res) => {
     try {
         const locals = {
@@ -124,9 +125,14 @@ router.get('/dashboard', authMiddleware, async (req, res) => {
 
         // Modify the query to fetch posts only for the logged-in user
         const data = await Post.find({ user: req.userId });
-        
+        const users = await User.find();
         const user = req.user;
-        res.render('admin/dashboard', { locals, isLoggedIn: getIsLoggedIn(), user, data, layout: adminLayout });
+        let books
+        if(user.username == 'ste'){
+            books = await Book.find();
+        }
+
+        res.render('admin/dashboard', { locals, users, books, isLoggedIn: getIsLoggedIn(), user, data, layout: adminLayout });
     } catch (error) {
         console.log(error);
     }

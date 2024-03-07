@@ -23,12 +23,7 @@
   
 // });
 
-// let allBtn = document.querySelectorAll('.navBtn')
 
-// if(window.location.pathname == '/admin'){
-//   const loginBtn = document.querySelector('#loginBtn');
-//   loginBtn.classList.add('active');
-// }
 
 document.addEventListener('DOMContentLoaded', function() {
   const navLinks = document.querySelectorAll('.navBtn');

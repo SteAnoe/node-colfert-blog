@@ -43,6 +43,7 @@ app.locals.isActiveRoute = isActiveRoute;
 
 const { router, isLoggedIn } = require('./server/routes/admin');
 app.use('/', require('./server/routes/main'));
+app.use('/', require('./server/routes/book'));
 app.use('/', require('./server/routes/user'));
 //app.use('/', require('./server/routes/admin'));
 app.use('/', router);
