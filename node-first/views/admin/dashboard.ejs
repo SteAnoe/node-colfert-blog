@@ -57,9 +57,9 @@
 
 <% if (books && books.length > 0) { %>
   <h2 style="margin-top: 30px">Books</h2>
-  <ul class="admin-posts">
+  <div class=" d-flex" >
       <% books.forEach(book => { %>
-          <li>
+          
               <div class="card" style="width: 18rem;">
                   <img src="../../uploads/<%= book.img.data %>" class="card-img-top" alt="...">
                   <div class="card-body">
@@ -105,9 +105,9 @@
                       </div>
                   </div>
               </div>
-          </li>
+          
       <% }) %>
-  </ul>
+  </div>
 <% } %>
 
 <script>

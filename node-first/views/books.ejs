@@ -9,6 +9,12 @@
     <div class="d-flex">
         <% books.forEach(book => { %>
             <div class="card" style="width: 18rem;">
+              <% if (book.user.username != null) { %>
+                <div>Preso in prestito da <%= book.user.username %></div>
+                <div>Disponibile dal <%= book.returnedAt %></div>
+              <% } else { %>
+                <div>Disponibile</div>
+              <% } %>
               <img src="../../uploads/<%= book.img.data %>" class="card-img-top" alt="..." style="max-height: 400px;">
               <div class="card-body">
                 <h5 class="card-title"><%= book.title %></h5>
