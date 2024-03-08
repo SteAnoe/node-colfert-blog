@@ -291,6 +291,13 @@ img {
   width: 260px;
 }
 
+.post-comments{
+  display: block;
+  width: 100%;
+  min-width: 350px;
+  max-width: 60vw;
+  word-wrap: break-word;
+}
 .article-ul li a {
 /*display: flex;
   flex-direction: column;

@@ -7,7 +7,7 @@
     <form action="/add-comment" method="POST" style="margin-top: 30px;">
         <input type="hidden" name="postId" value="<%= data._id %>">
         <label for="body"><b>Add comment</b></label>
-        <textarea name="body" id="body" cols="30" rows="10"></textarea>
+        <textarea id="body" class="form-control" name="body" cols="30" rows="1"></textarea>
         <input type="submit" value="Add comment" class="btn">
     </form>    
 <% } %>
@@ -16,8 +16,8 @@
      <% data.comments.forEach(comment => { %>      
             <li>
                 <span>By: <%= comment.user.username %></span>
-                <span><%= comment.body %></span>
-                <span class="article-list__date"><%= comment.createdAt.toDateString() %></span>
+                <span class="post-comments"><%= comment.body %></span>
+                <span class="article-list__date"><%= comment.createdAt.toLocaleString('it-IT') %></span>
             </li>
         <% }) %>
 <% } %>
