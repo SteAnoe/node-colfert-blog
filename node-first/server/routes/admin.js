@@ -13,6 +13,11 @@ const jwtSecret = process.env.JWT_SECRET
 const multer = require('multer');
 const path = require('path');
 
+const getFormattedDate = () => {
+    const now = new Date();
+    return now.toLocaleString('it-IT');
+  };
+
 let storage = multer.diskStorage({
     destination: function (req,file,cb) {
         cb(null, 'public/uploads/')
@@ -164,7 +169,8 @@ router.post('/add-post', authMiddleware, async (req, res) => {
             const newPost = new Post({
                 title: req.body.title,
                 body: req.body.body,
-                user: req.userId, // Set user to the ObjectId of the logged-in user
+                user: req.userId, 
+                createdAt: formattedDate,
             });
             await newPost.save();
             res.redirect('/dashboard');

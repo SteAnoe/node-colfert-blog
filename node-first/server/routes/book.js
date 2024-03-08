@@ -50,7 +50,7 @@ router.get('/books', async (req, res) => {
         }
         const user = req.session.user
         const users = await User.find()
-        const books = await Book.find()
+        const books = await Book.find().sort({ title: 1 });
         res.render('books', {locals, books, user, users, layout: adminLayout})
     } catch (error) {
         console.log(error)

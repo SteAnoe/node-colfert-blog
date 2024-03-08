@@ -6,22 +6,35 @@
 </div>
 <% if (books && books.length > 0) { %>
     <h2 style="margin-top: 30px">Books</h2> 
-    <div class="d-flex">
-        <% books.forEach(book => { %>
-            <div class="card" style="width: 18rem;">
+    <div class="d-flex justify-content-between">
+      
+      <% books.forEach(book => { %>
+      <article class="card1">
+        <img
+          class="card__background"
+          src="../../uploads/<%= book.img.data %>"
+          alt="Photo of Cartagena's cathedral at the background and some colonial style houses"
+          width="1920"
+          height="2193"
+        />
+        <div class="card__content | flow">
+          <div class="card__content--container | flow">
+            <h2 class="card__title"><%= book.title %></h2>
+            <div class="card__description">
+              <div><%= book.author %></div>
               <% if (book.user.username != null) { %>
-                <div>Preso in prestito da <%= book.user.username %></div>
-                <div>Disponibile dal <%= book.returnedAt %></div>
+                <div>Preso in prestito</div>
+                <div>Disponibile dal <%= book.returnedAt.toLocaleDateString('it-IT') %></div>
               <% } else { %>
                 <div>Disponibile</div>
               <% } %>
-              <img src="../../uploads/<%= book.img.data %>" class="card-img-top" alt="..." style="max-height: 400px;">
-              <div class="card-body">
-                <h5 class="card-title"><%= book.title %></h5>
-                <p class="card-text"><%= book.author %></p>             
               </div>
-            </div>
-        <% }) %>      
+              <button class="card__button">Read more</button>
+          </div>
+        </div>
+      </article>
+      <% }) %> 
+        
     </div>
 <% } %>
 

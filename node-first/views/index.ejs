@@ -19,7 +19,7 @@
                 <a href="/post/<%= post._id %>">
                     <div class="title-date-div"> 
                         <span class="text-danger text-uppercase"><b><%= post.title %></b></span>
-                        <span class="article-list__date"><%= post.createdAt.toDateString() %></span>
+                        <span class="article-list__date"><%= post.createdAt.toLocaleString('it-IT') %></span>
                     </div>
                     <% if (post.body.length > 50) { %>
                         <article id="postBody<%= post._id %>" class="shortened">
