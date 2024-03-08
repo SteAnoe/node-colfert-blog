@@ -50,6 +50,8 @@ textarea {
   margin-bottom: 1rem;
 }
 
+footer{display: none;}
+
 .btn {
   background-color: var(--black);
   border: none;
@@ -84,15 +86,15 @@ img {
 /* Layout */
 .container {
   max-width: 982px;
-  margin: 80px auto 0 auto;
+  margin: 120px auto 0 auto;
   padding: 0 10px;
-  min-height: calc(100vh - 55px - 80px);
+  /*min-height: calc(100vh - 55px - 80px);*/
   display: grid;
   align-items: center;
 }
 
 .distance_container{
-  margin-top: 100px;
+  /*margin-top: 100px;*/
 }
 
 .main {
@@ -386,9 +388,9 @@ img {
   bottom: 0;
 }
 
-
 /* Dashboard Admin */
 .admin-title {
+  /*padding-top: 100px;*/
   display: flex;
   justify-content: space-between;
   align-items: center;
