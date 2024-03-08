@@ -1,5 +1,7 @@
-<input type="text" id="searchTerm" placeholder="Search...">
-<button onclick="search()">Search</button>
+<div>
+  <input type="text" id="searchTerm" placeholder="Search...">
+  <button onclick="search()">Search</button>
+</div>
 
 <div id="searchResults" class="d-flex">
 
@@ -9,7 +11,7 @@
     <div class="d-flex justify-content-between">
       
       <% books.forEach(book => { %>
-      <article class="card1">
+      <article class="card1 col">
         <img
           class="card__background"
           src="../../uploads/<%= book.img.data %>"

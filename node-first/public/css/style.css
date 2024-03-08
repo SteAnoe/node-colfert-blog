@@ -84,9 +84,9 @@ img {
 /* Layout */
 .container {
   max-width: 982px;
-  margin: 0 auto;
+  margin: 80px auto 0 auto;
   padding: 0 10px;
-  min-height: calc(100vh - 55px + 80px);
+  min-height: calc(100vh - 55px - 80px);
   display: grid;
   align-items: center;
 }
@@ -97,6 +97,7 @@ img {
 
 .main {
   width: 100%;
+  max-width: 982px;
 }
 
 /* Hero Section */
@@ -121,11 +122,12 @@ img {
 } */
 
 .header {
+  position: fixed;
+  top: 0;
   padding-top: 10px;
   background: rgba(0, 0, 0, 0.3);
   box-shadow: 0px 0px 10px rgba(0,0,0,1);
   padding-bottom: 10px;
-  position: fixed;
   width: 100%;
   z-index: 999;
 }
@@ -594,12 +596,12 @@ img {
 .card1 {
   display: grid;
   place-items: center;
-  width: 80vw;
   max-width: 21.875rem;
-  height: 28.125rem;
+  height: 25rem;
   overflow: hidden;
   border-radius: 0.625rem;
   box-shadow: 0.25rem 0.25rem 0.5rem rgba(0, 0, 0, 0.25);
+  margin: 15px;
 }
 
 .card1 > * {
