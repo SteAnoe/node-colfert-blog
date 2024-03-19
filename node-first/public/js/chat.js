@@ -42,6 +42,10 @@ form.addEventListener('submit', async (e) => {
                 // Emit message content and conversation ID to the server
                 socket.emit('sendMessage', { message, conversationId, recipientId: userId , loggedUser});
                 sendMessage(message)
+                fetchConversationsAndDisplay();
+                fetchSingleConversationAndDisplay(conversationId)
+                $('#chatWindow').addClass('display-flex')
+                $('#chatWindow').removeClass('display-none')
                 // Clear input field
                 input.value = '';
             } else {
@@ -79,9 +83,37 @@ function sendMessage(data){
     chatBox.appendChild(msg);
     
 }
+
+let hasNewMessages; 
 socket.on('notification', (data) => {
     console.log('Received notification:', data);
-    // Display a notification to the user
-    //alert(message);
     chatBtn.addClass('red');
+    hasNewMessages = [
+
+    ];
+    $(`[data-conversation-id='${data.conversationId}']`).addClass('red')
+    hasNewMessages.push(data.conversationId)
+    
+});
+
+document.getElementById('chatBtn').addEventListener('click', () => {
+    // Call the function to fetch conversations and display them
+    fetchConversationsAndDisplay();
+    if ($('#chatBtn').hasClass('red')){
+        $('#chatBtn').removeClass('red');
+    }
+    if ($('#chatWindow').hasClass('display-none')){
+        $('#chatWindow').removeClass('display-none');
+        $('#chatWindow').addClass('display-flex');
+    } else{
+        $('#chatWindow').addClass('display-none');
+        $('#chatWindow').removeClass('display-flex');
+    }
+    //if (hasNewMessages.length > 0) {
+    //    
+    //    hasNewMessages.forEach(convId => {
+    //        $(`[data-conversation-id='${convId}']`).addClass('red')
+    //        
+    //    });
+    //}
 });

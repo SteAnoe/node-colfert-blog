@@ -77,6 +77,12 @@ router.post('/add-message', authMiddleware, async (req, res) => {
             existingConversation = new Conversation({
                 participants: [user, receivingUser._id],
                 messages: [],
+                notifications: {
+                    user: 0,
+                    userId: 0,
+                }
+                    
+                
             });
 
             await existingConversation.save();

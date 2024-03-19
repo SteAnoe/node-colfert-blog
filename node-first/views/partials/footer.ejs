@@ -2,24 +2,24 @@
     <div style="width: 90%;">
         &copy <%= new Date().getFullYear(); %> Sono il Footer
     </div>
-    <div id="chatBtn" style="width: 10%; background-color: black;" onclick="hideChat()">
+    <div id="chatBtn" style="width: 10%; background-color: black;">
         chat
-        <div id="chatWindow" class="d-none" style="color: black;">
-            <div class="userList">
-
-            </div>
-            <div class="rightBox">
-                <div class="chatBox">
-                       
-                </div>
-                <input type="text" style="height: 5%;">
-            </div>
-        </div>
     </div>   
+    <div id="chatWindow" class="display-none" style="color: black;">
+        <div class="userList">
+        </div>
+        <div class="rightBox">
+            <div class="chatBox">
+                   
+            </div>
+            <input type="text" style="height: 5%;">
+        </div>
+    </div>
 </footer>
 
 <script>
     // Function to fetch conversations and display them
+    
     async function fetchConversationsAndDisplay() {
         try {
             // Make a GET request to fetch conversations
@@ -36,34 +36,23 @@
 
             // Display each conversation in the chat panel
             conversations.forEach(conversation => {
-              const userListItem = document.createElement('div');
+                let userListItem
+              
               if (conversation.participants && Array.isArray(conversation.participants)) {
-                userListItem.innerHTML = `
-                <div data-user-id="${conversation._id}">${conversation.participants}</div>
+                userListItem = `
+                <div style="cursor: pointer;" onclick="fetchSingleConversationAndDisplay('${conversation._id}')" data-conversation-id="${conversation._id}">${conversation.participants}</div>
                 `
-                userListItem.addEventListener('click', () => {
-                    fetchSingleConversationAndDisplay(conversation._id); // Call fetchSingleConversationAndDisplay with conversation ID
-                });
               }  
-              document.querySelector('.userList').appendChild(userListItem);
-            });
-
-            // Show the chat panel
-            chatWindow.classList.remove('d-none');
-            chatWindow.classList.add('d-flex');
+              
+              $('.userList').append(userListItem)
+            });          
         } catch (error) {
             console.error('Error fetching conversations:', error);
         }
     }
 
     // Event listener for the chat button
-    document.getElementById('chatBtn').addEventListener('click', () => {
-        // Call the function to fetch conversations and display them
-        fetchConversationsAndDisplay();
-        if ($('#chatBtn').hasClass('red')){
-            $('#chatBtn').removeClass('red');
-        }
-    });
+
 
     async function fetchSingleConversationAndDisplay(conversationId) {
     try {
@@ -87,6 +76,7 @@
             messageElement.classList.add(message.user === userId ? 'msg-sent' : 'msg-received'); // Apply appropriate class based on message sender
             chatBox.appendChild(messageElement);
         });
+        chatBox.scrollTop = chatBox.scrollHeight;
     } catch (error) {
         console.error('Error fetching messages for conversation:', error);
     }

@@ -10,6 +10,7 @@ const ConversationSchema = new Schema({
         },
     ],
     messages: [Message.schema],
+    notifications: []
 });
 
 module.exports = mongoose.model('Conversation', ConversationSchema)
