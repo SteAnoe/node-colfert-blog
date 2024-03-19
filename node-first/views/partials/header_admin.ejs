@@ -22,9 +22,12 @@
                         <a id="bookBtn" class="nav-link navBtn" href="/books">Books</a>
                     </li>
                     <li class="nav-item">
+                        <a id="jobBtn" class="nav-link navBtn" href="/jobs">Jobs</a>
+                    </li>
+                    <li class="nav-item">
                         <a id="usersBtn" class="nav-link navBtn" href="/users">Users</a>
                     </li>
-                    <% if (user && user.username) { %>
+                    <% if (user && user.username && user != 'undefined' && user != 'null') { %>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"
                             aria-expanded="false"><%= user.username %></a>

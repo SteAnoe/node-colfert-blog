@@ -1,129 +1,213 @@
 <div class="admin-title">
-  <% if (user != undefined) { %>
-    <h1><%= user.username %></h1>  
-  <% } %>
-  <% if (user && user.role === 'admin') { %>
-    <div class="d-flex" style="flex-direction: column;">
-      <a href="/add-post" class="button">+ Add New Post</a>
-      <% if (user.username == 'ste') { %>      
-        <a href="/add-book" class="button">+ Add New Book</a>
-      <% } %>
-    </div>
-  <% } %>
+  <% if (user !=undefined) { %>
+    <h1>
+      <%= user.username %>
+    </h1>
+    <% } %>
+      <% if (user && user.role==='admin' ) { %>
+        <div class="d-flex" style="flex-direction: column;">
+          <a href="/add-post" class="button">+ Add New Post</a>
+          <% if (user.username=='ste' ) { %>
+            <a href="/add-book" class="button">+ Add New Book</a>
+            <a href="/add-job" class="button">+ Add New Job</a>
+            <% } %>
+        </div>
+        <% } %>
 </div>
 
 <div class="img-container">
-  <% if (user.avatar.data != '/' && user.avatar.data != undefined) { %>
+  <% if (user.avatar.data !='/' && user.avatar.data !=undefined) { %>
     <img src="../../uploads/<%= user.avatar.data %>" alt="User Avatar" width="100px" height="100px">
-  <% } else { %>
-    <img src="../../img/C_bianco.png" alt="User Avatar" width="100px" height="100px">
-  <% } %>
-  <form id="customForm" action="/edit-user?_method=PUT" method="POST" enctype="multipart/form-data">
-    <label for="fileInput" class="custom-file-input-label">
-      <div class="custom-file-input-button"></div>
-    </label>
-    <input type="file" id="fileInput" accept=".png, .jpg, .jpeg, .gif, .webp" name="avatar" class="custom-file-input" style="display: none;" onchange="handleFileChange()">
-    <input type="submit" id="submitButton" value="Submit" style="display: none;">
-  </form>
+    <% } else { %>
+      <img src="../../img/C_bianco.png" alt="User Avatar" width="100px" height="100px">
+      <% } %>
+        <form id="customForm" action="/edit-user?_method=PUT" method="POST" enctype="multipart/form-data">
+          <label for="fileInput" class="custom-file-input-label">
+            <div class="custom-file-input-button"></div>
+          </label>
+          <input type="file" id="fileInput" accept=".png, .jpg, .jpeg, .gif, .webp" name="avatar"
+            class="custom-file-input" style="display: none;" onchange="handleFileChange()">
+          <input type="submit" id="submitButton" value="Submit" style="display: none;">
+        </form>
 </div>
 <div class="invalid-feedback" id="photo-feedback"></div>
 
+<% if (populatedUser && populatedUser.messages && populatedUser.messages.length > 0) { %>
+  <h2 style="margin-top: 30px">Messages</h2>
+  <ul>
+    <% populatedUser.messages.forEach(message => { %>
+      <li><%= message.user.username %> - <%= message.body %></li>
+    <% }) %>
+  </ul>
+<% } %>
 
+<% if (data && data.length> 0) { %>
+  <h2 style="margin-top: 30px">Posts</h2>
+  <ul class="admin-posts">
+    <% data.forEach(post=> { %>
 
-<% if (data && data.length > 0) { %>
-<h2 style="margin-top: 30px">Posts</h2> 
-<ul class="admin-posts">
-    <% data.forEach(post => { %>
-     
       <li>
-        <a href="/post/<%= post._id %>"> 
+        <a href="/post/<%= post._id %>">
           <%= post.title %> &nearr;
         </a>
         <div class="admin-post-controls">
           <a href="/edit-post/<%= post._id %>" class="btn">Edit</a>
-          
+
           <form action="/delete-post/<%= post._id %>?_method=DELETE" method="POST">
             <input type="submit" value="Delete" class="btn-delete btn">
           </form>
+
+        </div>
+
+      </li>
+
+      <% }) %>
+
+  </ul>
+  <% } %>
+  <div class="row">   
+    <% if (books && books.length> 0) { %>
+      <h2 style="margin-top: 30px">Books</h2>
+      <div class=" d-flex">
+        <div class="row justify-content-between">
+
+          <% books.forEach(book=> { %>
   
+            <div class="card col-4">
+              <img src="../../uploads/<%= book.img.data %>" class="card-img-top" alt="...">
+              <div class="card-body">
+                <h5 class="card-title">
+                  <%= book.title %>
+                </h5>
+                <p class="card-text">
+                  <%= book.author %>
+                </p>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                  data-bs-target="#editDeleteModal<%= book._id %>">
+                  Edit / Delete
+                </button>
+              </div>
+            </div>
+  
+            <div class="modal fade" id="editDeleteModal<%= book._id %>" tabindex="-1"
+              aria-labelledby="editDeleteModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="editDeleteModalLabel">Edit <%= book.title %>
+                    </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form id="editForm<%= book._id %>" action="/edit-book?_method=PUT" method="POST">
+                      <div class="mb-3">
+                        <label for="editUser<%= book._id %>" class="form-label">Borrow to:</label>
+                        <input list="usersList" class="form-control" id="editUser<%= book._id %>" name="username"
+                          value="<%= (book.user.username != null) ? book.user.username : '' %>" autocomplete="off">
+                        <datalist id="usersList">
+                          <% users.forEach(user=> { %>
+                            <option value="<%= user.username %>">
+                              <% }) %>
+                        </datalist>
+                      </div>
+                      <div class="mb-3">
+                        <label for="returnDate<%= book._id %>" class="form-label">Return Date:</label>
+                        <input type="date" class="form-control" id="returnDate<%= book._id %>" name="returnDate">
+                      </div>
+                      <input type="hidden" name="bookId" value="<%= book._id %>">
+                      <button type="submit" class="btn btn-primary">Save changes</button>
+                    </form>
+                    <form id="deleteForm<%= book._id %>" action="/delete-book?_method=DELETE" method="POST">
+                      <button type="submit" class="btn btn-danger">Delete Book</button>
+                      <input type="hidden" name="bookId" value="<%= book._id %>">
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+            <% }) %>
+        </div>
+        <% } %>
+        </div>
+  </div>
+  <div class="row">
+    <% if (jobs && jobs.length> 0) { %>
+      <h2 style="margin-top: 30px">Jobs</h2>
+      <div class="d-flex mb-5 ">
+        <div class="row justify-content-between">
+
+          <% jobs.forEach(job=> { %>
+            <div class="card col-3">
+              <div class="card-body">
+                <h5 class="card-title">
+                  <%= job.title %>
+                </h5>
+                <p class="card-text">
+                  <%= job.createdAt.toLocaleString('it-IT') %>
+                </p>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                  data-bs-target="#editDeleteModal<%= job._id %>">
+                  Edit / Delete
+                </button>
+              </div>
+            </div>
+            <div class="modal fade" id="editDeleteModal<%= job._id %>" tabindex="-1"
+              aria-labelledby="editDeleteModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-fullscreen fix-full-screen">
+                <div class="modal-content bg-primary">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="editDeleteModalLabel">Edit <%= job.title %>
+                    </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form id="editForm<%= job._id %>" action="/edit-job?_method=PUT" method="POST">
+                      <div class="mb-3">
+                        <label for="editJob<%= job._id %>" class="form-label">Title</label>
+                        <input class="form-control" id="editJob<%= job._id %>" name="title"
+                          value="<%= (job.title != null) ? job.title : '' %>">
+                        <label for="editJob<%= job._id %>" class="form-label">Body</label>
+                        <textarea style="height: 45vh;" class="form-control" id="editJob<%= job._id %>" name="body" style="height:min-content; "><%= (job.body != null) ? job.body : '' %></textarea>
+                        <% if (job.applications && job.applications.length > 0) { %>
+                          <div>
+                              <h3>Applicants:</h3>
+                              <% job.applications.forEach(application => { %>
+                                  <a href="/users/<%= application.userId %>" style="text-decoration: underline;">
+                                      <div><%= application.username %></div>
+                                  </a>
+                              <% }) %>
+                          </div>
+                        <% } %>
+                      </div> 
+                      <input type="hidden" name="jobId" value="<%= job._id %>">
+                      <button type="submit" class="btn btn-primary">Save changes</button>
+                    </form>
+                    <form id="deleteForm<%= job._id %>" action="/delete-job?_method=DELETE" method="POST">
+                      <button type="submit" class="btn btn-danger">Delete job</button>
+                      <input type="hidden" name="jobId" value="<%= job._id %>">
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% }) %>
         </div>
   
-      </li>
-  
-    <% }) %>
-   
-</ul>
-<% } %>
-
-<% if (books && books.length > 0) { %>
-  <h2 style="margin-top: 30px">Books</h2>
-  <div class=" d-flex" >
-      <% books.forEach(book => { %>
-          
-              <div class="card" style="width: 18rem;">
-                  <img src="../../uploads/<%= book.img.data %>" class="card-img-top" alt="...">
-                  <div class="card-body">
-                      <h5 class="card-title"><%= book.title %></h5>
-                      <p class="card-text"><%= book.author %></p>
-                      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editDeleteModal<%= book._id %>">
-                          Edit / Delete
-                      </button>
-                  </div>
-              </div>
-
-              <div class="modal fade" id="editDeleteModal<%= book._id %>" tabindex="-1" aria-labelledby="editDeleteModalLabel" aria-hidden="true">
-                  <div class="modal-dialog">
-                      <div class="modal-content">
-                          <div class="modal-header">
-                              <h1 class="modal-title fs-5" id="editDeleteModalLabel">Edit <%= book.title %></h1>
-                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                          </div>
-                          <div class="modal-body">
-                              <form id="editForm<%= book._id %>" action="/edit-book?_method=PUT" method="POST">
-                                <div class="mb-3">
-                                    <label for="editUser<%= book._id %>" class="form-label">Borrow to:</label>
-                                    <input list="usersList" class="form-control" id="editUser<%= book._id %>" name="username" 
-                                    value="<%= (book.user.username != null) ? book.user.username : '' %>" autocomplete="off">
-                                    <datalist id="usersList">
-                                      <% users.forEach(user => { %>
-                                        <option value="<%= user.username %>">
-                                      <% }) %>
-                                    </datalist>                      
-                                </div>
-                                <div class="mb-3">
-                                  <label for="returnDate<%= book._id %>" class="form-label">Return Date:</label>
-                                  <input type="date" class="form-control" id="returnDate<%= book._id %>" name="returnDate">
-                                </div>
-                                <input type="hidden" name="bookId" value="<%= book._id %>">
-                                <button type="submit" class="btn btn-primary">Save changes</button>
-                              </form>
-                              <form id="deleteForm<%= book._id %>" action="/delete-book?_method=DELETE" method="POST">
-                                  <button type="submit" class="btn btn-danger">Delete Book</button>
-                                  <input type="hidden" name="bookId" value="<%= book._id %>">
-                              </form>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          
-      <% }) %>
+        <% } %>
+        </div>
   </div>
-<% } %>
 
 <script>
-
-document.addEventListener('DOMContentLoaded', function () {
-  const viewDetailsBtns = document.querySelectorAll('.view-details-btn');
-  const modalTitle = document.querySelector('.modal-title');
-  const modalBody = document.querySelector('#modalBody');
-
-  viewDetailsBtns.forEach(btn => {
-    btn.addEventListener('click', function () {
-      modalTitle.textContent = this.dataset.bookTitle;
-      modalBody.innerHTML = `<p>Author: ${this.dataset.bookAuthor}</p>`;
+  document.addEventListener('DOMContentLoaded', function () {
+    const viewDetailsBtns = document.querySelectorAll('.view-details-btn');
+    const modalTitle = document.querySelector('.modal-title');
+    const modalBody = document.querySelector('#modalBody');
+    viewDetailsBtns.forEach(btn => {
+      btn.addEventListener('click', function () {
+        modalTitle.textContent = this.dataset.bookTitle;
+        modalBody.innerHTML = `<p>Author: ${this.dataset.bookAuthor}</p>`;
+      });
     });
   });
-
-});
-
 </script>

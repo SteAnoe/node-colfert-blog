@@ -5,6 +5,7 @@ const Post = require('../models/Post');
 const User = require('../models/User');
 const Comment = require('../models/Comment');
 const Book = require('../models/Book');
+const Job = require('../models/Job');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 let isLoggedIn = false; 
@@ -128,16 +129,25 @@ router.get('/dashboard', authMiddleware, async (req, res) => {
             title: "Admin - Dashboard",
         };
 
-        // Modify the query to fetch posts only for the logged-in user
         const data = await Post.find({ user: req.userId });
         const users = await User.find();
+        console.log(users)
         const user = req.user;
         let books
+        let jobs
         if(user.username == 'ste'){
             books = await Book.find();
+            jobs = await Job.find();
         }
-
-        res.render('admin/dashboard', { locals, users, books, isLoggedIn: getIsLoggedIn(), user, data, layout: adminLayout });
+        const populatedUser = await User.findById(req.userId).populate({
+            path: 'messages',
+            populate: {
+                path: 'user',
+                select: 'username',
+            },
+        });
+      
+        res.render('admin/dashboard', { locals, jobs, users, populatedUser, user, books, isLoggedIn: getIsLoggedIn(), user, data, layout: adminLayout });
     } catch (error) {
         console.log(error);
     }
@@ -170,7 +180,6 @@ router.post('/add-post', authMiddleware, async (req, res) => {
                 title: req.body.title,
                 body: req.body.body,
                 user: req.userId, 
-                createdAt: formattedDate,
             });
             await newPost.save();
             res.redirect('/dashboard');
@@ -260,7 +269,7 @@ router.post('/register', async (req, res) => {
         const locals = {
             title: "Admin"
         }
-        console.log('can')
+        
         const {username, password} = req.body;
         const avatar = {
             data: '/',
@@ -275,7 +284,7 @@ router.post('/register', async (req, res) => {
             const user = await User.create({username,password: hashedPassword, avatar})
             const message = `User Created ${user.username}`
             //res.status(201).json({message: 'User Created', user})
-            res.render('admin/index', {locals, message, user, layout: adminLayout})
+            res.render('admin/index', {locals, message, user: req.user || null, layout: adminLayout})
         } catch (error) {
             if (error.code === 11000){
                 res.status(409).json({message: 'User already in use'})
@@ -296,7 +305,6 @@ router.post('/add-comment', authMiddleware, async (req, res) => {
             title: "Add Comment",
             //user: req.user, // Include user information
         };
-        console.log(locals.user)
         const postId = req.body.postId; // Assuming postId is sent in the request body
         const newComment = new Comment({
             body: req.body.body,

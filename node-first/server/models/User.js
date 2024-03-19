@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const Message = require('./Message');  
 const Schema = mongoose.Schema;
 const UserSchema = new Schema({
     username:{
@@ -20,6 +20,7 @@ const UserSchema = new Schema({
         data: String,
         contentType: String 
     },
+    messages: [Message.schema],
 })
 
 module.exports = mongoose.model('User', UserSchema)

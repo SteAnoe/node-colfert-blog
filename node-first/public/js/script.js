@@ -108,3 +108,10 @@ async function handleFileChange() {
   }
 }
 
+function hideChat(){
+  if ($('#chatWindow').hasClass('d-none')) {
+    $('#chatWindow').removeClass('d-none').addClass('d-flex');
+  } else {
+    $('#chatWindow').removeClass('d-flex').addClass('d-none');
+  }
+}

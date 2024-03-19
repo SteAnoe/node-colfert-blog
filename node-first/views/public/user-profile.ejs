@@ -11,4 +11,17 @@
 
   </div>
 
+  <% if (user && user.username && user._id.toString() !== selectedUser._id.toString()) { %>
+    <form id="messageForm" action="/add-message" method="POST" style="margin-top: 30px;">
+      <input type="hidden" id="userId" data-user-id="<%= selectedUser._id %>" name="userId" value="<%= selectedUser._id %>">
+      <!-- Include conversation ID input field -->
+      <input type="hidden" id="loggedUser" data-user-id="<%= user._id %>" name="loggedUser" value="<%= user._id %>">
+      <input type="hidden" id="conversationId" name="conversationId" value="<%= locals.conversationId %>">
+      <label for="body"><b>Add message</b></label>
+      <textarea id="messageInput" class="form-control" name="body" cols="30" rows="1"></textarea>
+      <input type="submit" value="Add message" class="btn">
+    </form> 
+  <% } %>
+
+ 
   

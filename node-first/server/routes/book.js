@@ -48,6 +48,7 @@ router.get('/books', async (req, res) => {
         const locals = {
             title: "Books",
         }
+  
         const user = req.session.user
         const users = await User.find()
         const books = await Book.find().sort({ title: 1 });
@@ -61,7 +62,7 @@ router.get('/books', async (req, res) => {
 router.get('/add-book', authMiddleware, async (req, res) => {
     try {
         const locals = {
-            title: "Add New Books",
+            title: "Add New Book",
         }
         const user = req.session.user
         const users = await User.find()

@@ -8,14 +8,14 @@
 </div>
 <% if (books && books.length > 0) { %>
     <h2 style="margin-top: 30px">Books</h2> 
-    <div class="d-flex justify-content-between">
+    <div class="d-flex justify-content-between flex-wrap">
       
       <% books.forEach(book => { %>
-      <article class="card1 col">
+      <article class="card1 col-3" id="card">
         <img
           class="card__background"
           src="../../uploads/<%= book.img.data %>"
-          alt="Photo of Cartagena's cathedral at the background and some colonial style houses"
+          alt="<%= book.title %>"
           width="1920"
           height="2193"
         />
@@ -31,12 +31,10 @@
                 <div>Disponibile</div>
               <% } %>
               </div>
-              <button class="card__button">Read more</button>
           </div>
         </div>
       </article>
       <% }) %> 
-        
     </div>
 <% } %>
 
@@ -77,5 +75,6 @@
           console.error('Error during search:', error);
       }
   }
+
   </script>
   
